@@ -2,6 +2,13 @@ import discord
 import random
 from discord.ext import commands
 
+import requests
+import os
+
+print(os.listdir('Imagenes'))
+memes = ["Imagenes\meme2.jpeg", 
+         "Imagenes\meme_programacion.jpeg"]
+
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -50,5 +57,72 @@ async def contrasena_aleatoria(ctx, longitud: int):
     for i in range(longitud):
         contrasena = contrasena + caracteres[random.randint(1, 70)]
     await ctx.send(contrasena)
+
+@bot.command()
+async def double_letter(ctx, letter: str, str = 1):
+    result = ''
+    for i in range (str):
+        result += letter * 2
+    await ctx.send(result)
+
+@bot.command()
+async def meme1(ctx):
+    with open('Imagenes/meme_programacion.jpeg', 'rb') as f:
+        # ¡Vamos a almacenar el archivo de la biblioteca Discord convertido en esta variable!
+        picture = discord.File(f)
+    # A continuación, podemos enviar este archivo como parámetro.
+    await ctx.send(file=picture)
+
+@bot.command()
+async def meme2(ctx):
+    with open('Imagenes/meme2.jpeg', 'rb') as f:
+        # ¡Vamos a almacenar el archivo de la biblioteca Discord convertido en esta variable!
+        picture = discord.File(f)
+    # A continuación, podemos enviar este archivo como parámetro.
+    await ctx.send(file=picture)
+
+@bot.command()
+async def meme_aleatorio(ctx):
+    imagen = random.choice(memes)
+    with open(imagen, 'rb') as f:
+        # ¡Vamos a almacenar el archivo de la biblioteca Discord convertido en esta variable!
+        picture = discord.File(f)
+    # A continuación, podemos enviar este archivo como parámetro.
+    await ctx.send(file=picture)
+
+def get_duck_image_url():    
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+@bot.command('duck')
+async def duck(ctx):
+    '''Una vez que llamamos al comando duck, 
+    el programa llama a la función get_duck_image_url'''
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
+
+programacion = ["Imagenes/meme2.jpeg", "Imagenes/meme_programacion.jpeg"]
+bideojuegos = ["Imagenes/meme_bideojuegos1.jpg", "Imagenes/meme_bideojuegos2.jpg"]
+deportes = ["Imagenes/meme_deportes1.jpg", "Imagenes/meme_deportes2.jpg", "Imagenes/meme_deportes3.png"]
+
+@bot.command()
+async def meme_tema(ctx, tema: str):
+    if tema == "programacion":
+        imagen = random.choice(programacion)
+    elif tema == "bideojuegos":
+        imagen = random.choice(bideojuegos)
+    elif tema == "deportes":
+        x = random.randint(1,5)
+        if x == 1:
+            imagen = "Imagenes/meme_deportes1.jpg"
+        elif x == 2:
+            imagen = "Imagenes/meme_deportes2.jpg"
+        elif x > 2 and x < 6:
+            imagen = "Imagenes/meme_deportes3.png"
+    with open(imagen, 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
 
 bot.run("Token")
