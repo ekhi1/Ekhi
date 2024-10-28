@@ -1,21 +1,54 @@
 import discord
+import random
 from discord.ext import commands
 
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='$', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 
 @bot.event
-async def on_ready():
+async def preparado():
     print(f'We have logged in as {bot.user}')
 
 @bot.command()
-async def hello(ctx):
+async def hola(ctx):
     await ctx.send(f'Hola, soy un bot {bot.user}!')
 
 @bot.command()
-async def heh(ctx, count_heh = 5):
-    await ctx.send("he" * count_heh)
+async def xd(ctx, count_xd = 5):
+    await ctx.send("xd" * count_xd)
 
-bot.run("EL TOKEN SECRETO VA AQUÍ")
+@bot.command()
+async def repetir(ctx, times: int, content='repeating...'):
+    """Repeats a message multiple times."""
+    for i in range(times):
+        await ctx.send(content)
+
+@bot.command()
+async def suma(ctx, left: int, right: int):
+    """Adds two numbers together."""
+    await ctx.send(left + right)
+
+@bot.command()
+async def escribir(ctx, *choices: str):
+    """Chooses between multiple choices."""
+    await ctx.send(random.choice(choices))
+
+@bot.command()
+async def contrasena_personalizada(ctx, longitud: int, contrasena: str):
+    caracteres = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    for i in range(longitud):
+        x = random.randint(0, 70)
+        y = caracteres[x]
+    await ctx.send(contrasena + y)
+
+@bot.command()
+async def contrasena_aleatoria(ctx, longitud: int):
+    contrasena = "Contraseña: "
+    caracteres = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    for i in range(longitud):
+        contrasena = contrasena + caracteres[random.randint(1, 70)]
+    await ctx.send(contrasena)
+
+bot.run("Token")
